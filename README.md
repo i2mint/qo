@@ -1,7 +1,7 @@
 
 # qo
 
-Quick access to code favorites.
+Quick access to code (personalized/collaborative) favorites.
 
 We all have our go-to utils and awesome tools. 
 Some of us are annoyed at having to type long dotpaths to the object we want to import.
