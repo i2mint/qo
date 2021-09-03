@@ -24,7 +24,6 @@ Don't use this for production or any long-term code. It's meant for pulling thin
 
 # Usage
 
-
 See what modules are available to import
 
 ```python
@@ -60,5 +59,53 @@ from qo import *
 ```
 
 
+
+# Inspiration
+
+When I have to do this:
+
+```python
+from sklearn.linear_model import Ridge
+from sklearn.metrics import confusion_matrix
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVR
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import AdaBoostRegressor
+from sklearn.neural_network import MLPRegressor
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.ensemble import StackingRegressor
+from sklearn.linear_model import RidgeCV, LassoCV
+from sklearn.preprocessing import StandardScaler
+```
+
+I go 🤮.
+
+I can never remember what is where. 
+Some packages (like `numpy`) percolate the best-of up to the root so that 
+these objects can be imported from there. Others (like `sklearn`) don't. 
+How do we solve this for ourselves -- and while we're at it, 
+handle multiple packages from a same place (`qo`)?
+
+When in fast mode, these kinds of things can really slow one down.
+Irrelevant details are detrimental to thinking. 
+Where an object is irrelevant when you're modeling. 
+
+I thought this might be more appropriate:
+
+```python
+from qo import (
+    Ridge, confusion_matrix, LinearRegression, AdaBoostClassifier, RandomForestClassifier,
+    SVR, RandomForestRegressor, LogisticRegression, DecisionTreeRegressor, AdaBoostRegressor,
+    MLPRegressor, GradientBoostingRegressor, KNeighborsRegressor, StackingRegressor,
+    RidgeCV, LassoCV, StandardScaler
+)
+```
+
+So I did it.
 
 
