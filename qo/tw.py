@@ -20,6 +20,47 @@ except ModuleNotFoundError as e:
 ddir = lambda o: [a for a in dir(o) if not a.startswith('_')]
 dddir = lambda o: [a for a in dir(o) if not a.startswith('__')]
 
+
+def goto_definition_file(obj):
+    """Will open the file that defines the obj and prints """
+    import inspect, subprocess
+
+    _, lineno = inspect.findsource(obj)
+    subprocess.run(['open', inspect.getfile(obj)])
+    print(f'Definition on line number: {lineno}')
+
+
+def goto_definition(
+    obj, command_template='open -na "PyCharm.app" --args --line {lineno} "{filepath}"'
+):
+    """Opens the definition of the object in the file it was defined at the line it
+    was defined.
+
+    The default is set to use pycharm to open the file on a mac.
+
+    To customize for your system/file_viewer, just use `functools.partial` to
+    fix the `command_template` for your case.
+
+    For pycharm on other systems, see:
+    https://www.jetbrains.com/help/pycharm/opening-files-from-command-line.html
+
+    For vi, see:
+    https://www.cyberciti.biz/faq/linux-unix-command-open-file-linenumber-function/
+
+    Etc.
+    """
+    import inspect, os
+
+    filepath = inspect.getfile(obj)
+    _, lineno = inspect.findsource(obj)
+    command = command_template.format(filepath=filepath, lineno=lineno)
+    os.system(command)  # would prefer to use subprocess, but something I'm missing
+    ## Not working with subprocess.run
+    #     import subprocess
+    #     print(command)
+    #     return subprocess.run(command.split(' '))
+
+
 ignore_errors = suppress(ModuleNotFoundError, ImportError, RuntimeError)
 
 with module_not_found_ignore:
