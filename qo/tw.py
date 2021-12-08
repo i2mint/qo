@@ -64,6 +64,9 @@ def goto_definition(
 ignore_errors = suppress(ModuleNotFoundError, ImportError, RuntimeError)
 
 with module_not_found_ignore:
+    from tabled import get_tables_from_url
+
+with module_not_found_ignore:
 
     def disp_wfsr(
         wf,
