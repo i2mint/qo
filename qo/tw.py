@@ -3,6 +3,8 @@ A medley of my most frequently used tools.
 """
 
 from contextlib import suppress
+from functools import partial
+
 from qo.qo_utils import module_not_found_ignore
 
 from warnings import warn
@@ -51,14 +53,20 @@ def goto_definition(
     """
     import inspect, os
 
-    filepath = inspect.getfile(obj)
-    _, lineno = inspect.findsource(obj)
-    command = command_template.format(filepath=filepath, lineno=lineno)
-    os.system(command)  # would prefer to use subprocess, but something I'm missing
-    ## Not working with subprocess.run
-    #     import subprocess
-    #     print(command)
-    #     return subprocess.run(command.split(' '))
+    try:
+        filepath = inspect.getfile(obj)
+        _, lineno = inspect.findsource(obj)
+        command = command_template.format(filepath=filepath, lineno=lineno)
+        os.system(command)  # would prefer to use subprocess, but something I'm missing
+        ## Not working with subprocess.run
+        #     import subprocess
+        #     print(command)
+        #     return subprocess.run(command.split(' '))
+    except TypeError:
+        if hasattr(obj, 'func'):
+            return goto_definition(obj.func, command_template)
+        else:
+            raise
 
 
 ignore_errors = suppress(ModuleNotFoundError, ImportError, RuntimeError)
