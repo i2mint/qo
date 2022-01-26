@@ -3,7 +3,7 @@ from contextlib import suppress
 from importlib import import_module
 from typing import Optional, Callable
 
-module_not_found_ignore = suppress(ModuleNotFoundError)
+module_not_found_ignore = suppress(ModuleNotFoundError, ImportError)
 
 not_found_sentinel = object()
 
