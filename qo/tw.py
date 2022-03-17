@@ -142,8 +142,6 @@ with module_not_found_ignore:
 with module_not_found_ignore:
     import ut.util.pstore
 
-with module_not_found_ignore:
-    import sklearn
 
 with module_not_found_ignore:
     from ut.pcoll.num import numof_trues
