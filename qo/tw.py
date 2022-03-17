@@ -25,11 +25,13 @@ dddir = lambda o: [a for a in dir(o) if not a.startswith('__')]
 
 def notebook_url(path: str, root_url='http://localhost:8888/'):
     import os
+
     # TODO: Figure out how to get the rootdir from the root_url
     if path.endswith('.ipynb'):
         return os.path.join(root_url, path)
     else:
         return os.path.join(root_url, 'tree', path)
+
 
 def goto_definition_file(obj):
     """Will open the file that defines the obj and prints """
@@ -81,6 +83,10 @@ ignore_errors = suppress(ModuleNotFoundError, ImportError, RuntimeError)
 
 with module_not_found_ignore:
     from unbox import print_missing_names
+
+with module_not_found_ignore:
+    from meshed import code_to_dag, DAG, FuncNode
+
 
 with module_not_found_ignore:
     from tabled import get_tables_from_url
