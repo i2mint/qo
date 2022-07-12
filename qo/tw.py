@@ -82,11 +82,13 @@ def goto_definition(
 ignore_errors = suppress(ModuleNotFoundError, ImportError, RuntimeError)
 
 with module_not_found_ignore:
+    from tested import validate_codec
+
+with module_not_found_ignore:
     from unbox import print_missing_names
 
 with module_not_found_ignore:
     from meshed import code_to_dag, DAG, FuncNode
-
 
 with module_not_found_ignore:
     from tabled import get_tables_from_url
