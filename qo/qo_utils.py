@@ -24,8 +24,6 @@ def _if_not_iterable_get_attributes(x: Any) -> Iterable[str]:
     return x
 
 
-# TODO: Add matched strings sorting control (for example, if match is in the beginning
-#  of the string, it comes first). Control through sorted key?
 def find_objects(
     pattern: str,
     objects: Any,
@@ -90,7 +88,6 @@ def find_objects(
             _key = partial(func_fanout, funcs=key)
             key = lambda x: tuple(_key(x))
         match_objects = sorted(match_objects, key=key)
-
 
     # instead of getting the strings from strings, we get them from the re.Match objects'
     # 'string' attribute, because these contain more information to be able to sort with
