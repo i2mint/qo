@@ -37,9 +37,11 @@ def callables_and_signatures(obj, object_to_strings: StringIterableFactory = ddi
                 pass
 
 
-def print_callables_signatures(obj, object_to_strings: StringIterableFactory = ddir):
+def print_callables_signatures(
+    obj, object_to_strings: StringIterableFactory = ddir, sep='\n * '
+):
     """Prints information on callable attributes of obj (module, class, ...)"""
-    print(callables_and_signatures(obj, object_to_strings))
+    print('', *callables_and_signatures(obj, object_to_strings), sep=sep)
 
 
 def find_objects(
