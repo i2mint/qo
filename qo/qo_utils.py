@@ -1,11 +1,32 @@
 """QO Utils"""
 from contextlib import suppress
 from importlib import import_module
-from typing import Optional, Callable
+from typing import Optional, Callable, Iterable, Any
+import re
 
 module_not_found_ignore = suppress(ModuleNotFoundError, ImportError)
 
 not_found_sentinel = object()
+
+ddir = lambda o: filter(lambda x: not x.startswith('_'), dir(o))
+
+
+def _if_not_iterable_get_attributes(x):
+    if not isinstance(x, Iterable):
+        x = list(ddir(x))
+    return x
+
+
+# TODO: Add matched strings sorting control (for example, if match is in the beginning
+#  of the string, it comes first). Control through sorted key?
+def strings_matching(
+    pattern,
+    strings: Iterable[str],
+    strings_preproc: Callable[[Any], Iterable[str]] = _if_not_iterable_get_attributes,
+):
+    strings = strings_preproc(strings)
+    pattern = re.compile(pattern)
+    return list(filter(pattern.search, strings))
 
 
 def import_and_add_if_available(

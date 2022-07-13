@@ -1,8 +1,8 @@
 """
 Personalized and collaborative quick access to imports.
 """
-
-from qo.qo_utils import module_not_found_ignore
+from functools import partial
+from qo.qo_utils import module_not_found_ignore, strings_matching
 
 source_module_names = ['tw']
 
@@ -12,7 +12,6 @@ with module_not_found_ignore:
     from qo import tw
 
 from qo.qo_utils import import_and_add_if_available
-from functools import partial
 
 acquire = partial(import_and_add_if_available, scope=locals())
 
@@ -26,4 +25,9 @@ with module_not_found_ignore:
     acquire('metrics', 'sklearn')
     acquire('confusion_matrix', 'sklearn.metrics')
 
+_root_names = locals()
+
+
+def find_object(query: str):
+    return strings_matching(query, _root_names)
 
