@@ -1,7 +1,10 @@
 """QO Utils"""
 from contextlib import suppress
+from operator import attrgetter, methodcaller
+from functools import partial
+from itertools import starmap
 from importlib import import_module
-from typing import Optional, Callable, Iterable, Any
+from typing import Optional, Callable, Iterable, Any, Sequence
 import re
 
 module_not_found_ignore = suppress(ModuleNotFoundError, ImportError)
@@ -10,8 +13,12 @@ not_found_sentinel = object()
 
 ddir = lambda o: filter(lambda x: not x.startswith('_'), dir(o))
 
+StringIterableFactory = Callable[[Any], Iterable[str]]
 
-def _if_not_iterable_get_attributes(x):
+_if_not_iterable_get_attributes: StringIterableFactory
+
+
+def _if_not_iterable_get_attributes(x: Any) -> Iterable[str]:
     if not isinstance(x, Iterable):
         x = list(ddir(x))
     return x
@@ -19,14 +26,112 @@ def _if_not_iterable_get_attributes(x):
 
 # TODO: Add matched strings sorting control (for example, if match is in the beginning
 #  of the string, it comes first). Control through sorted key?
-def strings_matching(
-    pattern,
-    strings: Iterable[str],
-    strings_preproc: Callable[[Any], Iterable[str]] = _if_not_iterable_get_attributes,
+def find_objects(
+    pattern: str,
+    objects: Any,
+    objects_to_strings: StringIterableFactory = _if_not_iterable_get_attributes,
+    *,
+    key=None
 ):
-    strings = strings_preproc(strings)
+    """Find strings matching a given pattern, possibly sorting them in a specific way.
+
+    :param pattern: The pattern to search (string representing a regular expression).
+    :param objects: An iterable of strings or an object that will resolve in one.
+    :param objects_to_strings: The function that resolves the ``objects`` input
+        (which is not even necessarily an iterable) into an iterable of strings.
+    :param key: If not None, will be used to sort matched objects.
+        ``key`` will be applied to objects of type ``re.Match``;
+        see https://docs.python.org/3/library/re.html#match-objects to get an idea of
+        how to define the right key function.
+        If ``key`` is an iterable ("of callables", assumed), make an
+        aggregate of these functions that will return a tuple of the sort keys.
+        This is akin to sorting by one columns primarly, a second secondarily, etc.
+    :return: A generator of matched strings.
+
+    >>> kwargs = dict(
+    ...     pattern='li',
+    ...     objects='bob and lilabet like to play with alice',
+    ...     objects_to_strings=str.split,
+    ... )
+    >>> list(find_objects(**kwargs))
+    ['lilabet', 'like', 'alice']
+
+    Sort the results in reverse length of string:
+
+    >>> list(find_objects(**kwargs, key=lambda x: -len(x.string)))
+    ['lilabet', 'alice', 'like']
+
+    Sort the results according to how early in the string the match happens:
+
+    >>> from operator import methodcaller
+    >>> list(find_objects(**kwargs, key=methodcaller('span')))
+    ['lilabet', 'like', 'alice']
+
+    The same as above, but with secondary "length" sorting:
+
+    >>> tuple(  # for a change!
+    ...     find_objects(**kwargs, key=[methodcaller('span'), lambda x: len(x.string)])
+    ... )
+    ('like', 'lilabet', 'alice')
+    """
+    strings = list(objects_to_strings(objects))
     pattern = re.compile(pattern)
-    return list(filter(pattern.search, strings))
+    match_objects = list(map(pattern.search, strings))
+
+    # The match_objects are re.Match instances that resolve to True when there's a match,
+    # and can therefore be used as selectors
+    match_objects = list(bitmap_selection(match_objects, selector=match_objects))
+
+    if key is not None:
+        if isinstance(key, Iterable):
+            # If match_sort_key is an iterable ("of callables", assumed), make an
+            # aggregate of these functions that will return a tuple of the sort keys.
+            # This is akin to sorting by one columns primarly, a second secondarily, etc.
+            _key = partial(func_fanout, funcs=key)
+            key = lambda x: tuple(_key(x))
+        match_objects = sorted(match_objects, key=key)
+
+
+    # instead of getting the strings from strings, we get them from the re.Match objects'
+    # 'string' attribute, because these contain more information to be able to sort with
+    return map(attrgetter('string'), match_objects)
+
+
+def func_fanout(*args, funcs: Iterable[Callable], **kwargs):
+    """Util to make a function that applies multiple functions to a single input.
+    Note that the function returns a generator that needs to be "consumed" to actually
+    get the outputs of the function.
+
+    ``func_fanout`` is meant to be used with ``functools.partial`` to "make" the
+    desired function, such as:
+
+    >>> from functools import partial
+    >>> f = partial(func_fanout, funcs=[
+    ...     lambda x, y: x + y,
+    ...     lambda x, y: x * y,
+    ... ])
+    >>> list(f(2, 3))
+    [5, 6]
+    >>> tuple(f(3, y=4))
+    (7, 12)
+
+    .. seealso: ``i2.multi_object.FuncFanout`` for a more involved version of this.
+
+    """
+    return (func(*args, **kwargs) for func in funcs)
+
+
+def bitmap_selection(iterable: Iterable, selector: Sequence):
+    """Select items of an iterable with items of a selector sequence of the same size.
+    The selector items should be, or resolve to, a ``bool``.
+
+    >>> list(bitmap_selection([2, 4, 6, 8], [True, False, True, False]))
+    [2, 6]
+    >>> tuple(bitmap_selection(range(5), [1, 0, None, '', 'blah']))
+    (0, 4)
+
+    """
+    return (obj for i, obj in enumerate(iterable) if selector[i])
 
 
 def import_and_add_if_available(
