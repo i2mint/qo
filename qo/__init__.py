@@ -11,7 +11,7 @@ with module_not_found_ignore:
     from qo.tw import *
     from qo import tw
 
-from qo.qo_utils import import_and_add_if_available
+from qo.qo_utils import import_and_add_if_available, print_callables_signatures
 from functools import partial as _partial
 
 acquire = _partial(import_and_add_if_available, scope=locals())
@@ -36,3 +36,4 @@ def find_names(query: str):
             query, _root_names, key=[_methodcaller('span'), lambda x: len(x.string)]
         )
     )
+

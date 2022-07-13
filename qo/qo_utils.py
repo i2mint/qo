@@ -6,12 +6,14 @@ from itertools import starmap
 from importlib import import_module
 from typing import Optional, Callable, Iterable, Any, Sequence
 import re
+from inspect import signature
 
 module_not_found_ignore = suppress(ModuleNotFoundError, ImportError)
 
 not_found_sentinel = object()
 
 ddir = lambda o: filter(lambda x: not x.startswith('_'), dir(o))
+
 
 StringIterableFactory = Callable[[Any], Iterable[str]]
 
@@ -24,12 +26,28 @@ def _if_not_iterable_get_attributes(x: Any) -> Iterable[str]:
     return x
 
 
+def callables_and_signatures(obj, object_to_strings: StringIterableFactory = ddir):
+    """A generator of strings describing the callables in obj (module, class, ...)"""
+    for attr_name in object_to_strings(obj):
+        attr = getattr(obj, attr_name)
+        if callable(attr):
+            try:
+                yield f'{attr_name}{signature(attr)}'
+            except Exception:
+                pass
+
+
+def print_callables_signatures(obj, object_to_strings: StringIterableFactory = ddir):
+    """Prints information on callable attributes of obj (module, class, ...)"""
+    print(callables_and_signatures(obj, object_to_strings))
+
+
 def find_objects(
     pattern: str,
     objects: Any,
     objects_to_strings: StringIterableFactory = _if_not_iterable_get_attributes,
     *,
-    key=None
+    key=None,
 ):
     """Find strings matching a given pattern, possibly sorting them in a specific way.
 
