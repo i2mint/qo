@@ -11,7 +11,7 @@ with module_not_found_ignore:
     from qo.tw import *
     from qo import tw
 
-from qo.qo_utils import import_and_add_if_available, print_callables_signatures
+from qo.qo_utils import import_and_add_if_available, print_signatures
 from functools import partial as _partial
 
 acquire = _partial(import_and_add_if_available, scope=locals())

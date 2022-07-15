@@ -4,7 +4,7 @@ from operator import attrgetter, methodcaller
 from functools import partial
 from itertools import starmap
 from importlib import import_module
-from typing import Optional, Callable, Iterable, Any, Sequence
+from typing import Optional, Callable, Iterable, Any, Sequence, Mapping, Sized
 import re
 from inspect import signature
 
@@ -16,6 +16,7 @@ ddir = lambda o: filter(lambda x: not x.startswith('_'), dir(o))
 
 
 StringIterableFactory = Callable[[Any], Iterable[str]]
+ObjectToString = Callable[[Any], str]
 
 _if_not_iterable_get_attributes: StringIterableFactory
 
@@ -26,22 +27,40 @@ def _if_not_iterable_get_attributes(x: Any) -> Iterable[str]:
     return x
 
 
-def callables_and_signatures(obj, object_to_strings: StringIterableFactory = ddir):
-    """A generator of strings describing the callables in obj (module, class, ...)"""
-    for attr_name in object_to_strings(obj):
-        attr = getattr(obj, attr_name)
-        if callable(attr):
-            try:
-                yield f'{attr_name}{signature(attr)}'
-            except Exception:
-                pass
+def _is_pair(x):
+    return isinstance(x, Iterable) and isinstance(x, Sized) and len(x) == 2
 
 
-def print_callables_signatures(
-    obj, object_to_strings: StringIterableFactory = ddir, sep='\n * '
+# Pattern: meshed
+def name_and_object_pairs(
+    objects,
+    name_of_obj: ObjectToString = attrgetter('__name__'),
+    objects_to_strings: StringIterableFactory = _if_not_iterable_get_attributes,
 ):
+    """Get (name, object) pairs from source of objects"""
+    if isinstance(objects, Iterable):
+        if isinstance(objects, Mapping):
+            yield from objects.items()
+        else:
+            for obj in objects:
+                if _is_pair(obj):
+                    yield obj  # assume it's a (name, obj) pair already
+                else:
+                    yield name_of_obj(obj), obj
+    else:
+        yield from ((objects_to_strings(o), o) for o in objects)
+
+
+def signature_strings(objects, object_to_strings: StringIterableFactory = ddir):
+    """A generator of strings describing the callables in obj (module, class, ...)"""
+    for name, obj in name_and_object_pairs(objects):
+        if callable(obj):
+            yield f'{name}{signature(obj)}'
+
+
+def print_signatures(obj, object_to_strings: StringIterableFactory = ddir, sep='\n * '):
     """Prints information on callable attributes of obj (module, class, ...)"""
-    print('', *callables_and_signatures(obj, object_to_strings), sep=sep)
+    print('', *signature_strings(obj, object_to_strings), sep=sep)
 
 
 def find_objects(
