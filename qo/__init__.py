@@ -7,6 +7,20 @@ from qo.qo_utils import module_not_found_ignore, find_objects
 source_module_names = ['tw']
 
 
+def copy_to_clipboard(obj):
+    """Copy object to clipboard"""
+    import pyperclip
+
+    pyperclip.copy(obj)
+
+
+def paste_from_clipboard(obj):
+    """Paste object from clipboard"""
+    import pyperclip
+
+    return pyperclip.paste(obj)
+
+
 def reload_module(module):
     """Reload a module"""
     from types import ModuleType
