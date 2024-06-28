@@ -34,7 +34,7 @@ def notebook_url(path: str, root_url='http://localhost:8888/'):
 
 
 def goto_definition_file(obj):
-    """Will open the file that defines the obj and prints """
+    """Will open the file that defines the obj and prints"""
     import inspect, subprocess
 
     _, lineno = inspect.findsource(obj)
@@ -80,6 +80,12 @@ def goto_definition(
 
 
 ignore_errors = suppress(ModuleNotFoundError, ImportError, RuntimeError)
+
+with module_not_found_ignore:
+    from scraped import download_site, markdown_of_site
+
+with module_not_found_ignore:
+    from hubcap import github_repo_text_aggregate
 
 with module_not_found_ignore:
     from tested import validate_codec
