@@ -82,6 +82,23 @@ def goto_definition(
 ignore_errors = suppress(ModuleNotFoundError, ImportError, RuntimeError)
 
 with module_not_found_ignore:
+    from lkj import (
+        wrapped_print,
+        truncate_dict_values,
+        truncate_string_with_marker,
+        regex_based_substitution,
+        print_progress,
+        print_with_timestamp,
+        clog,
+        log_calls,
+        import_object,
+        identity,
+    )
+
+from lkj.importing import import_object, register_namespace_forwarding
+from lkj.misc import identity, value_in_interval
+
+with module_not_found_ignore:
     from scraped import download_site, markdown_of_site
 
 with module_not_found_ignore:
@@ -154,8 +171,8 @@ with module_not_found_ignore:
 with module_not_found_ignore:
     from ut.pcoll.num import numof_trues
 
-with module_not_found_ignore:
-    from ut.util.log import printProgress, print_progress
+# with module_not_found_ignore:
+#     from ut.util.log import printProgress, print_progress
 
 with module_not_found_ignore:
     import ut.pplot.distrib
