@@ -144,9 +144,8 @@ with module_not_found_ignore:
         import_object,
         identity,
     )
-
-from lkj.importing import import_object, register_namespace_forwarding
-from lkj.misc import identity, value_in_interval
+    from lkj.importing import import_object, register_namespace_forwarding
+    from lkj.misc import identity, value_in_interval
 
 with module_not_found_ignore:
     from scraped import download_site, markdown_of_site
