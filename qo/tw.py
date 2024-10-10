@@ -24,9 +24,6 @@ ddir = lambda o: [a for a in dir(o) if not a.startswith('_')]
 dddir = lambda o: [a for a in dir(o) if not a.startswith('__')]
 
 
-from xdol import PyFilesReader
-
-
 def mk_code_aggregate_md(pkgs, *, copy_to_clipboard=True, save_to_path=None):
     """Make a markdown file that aggregates all the code in the given packages.
 
