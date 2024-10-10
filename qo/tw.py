@@ -2,9 +2,10 @@
 A medley of my most frequently used tools.
 """
 
+# WARNING: Don't delete unused imports. They are to have all in one place.
 from contextlib import suppress
 from functools import partial
-
+import os
 from qo.qo_utils import module_not_found_ignore
 
 from warnings import warn
@@ -21,6 +22,58 @@ except ModuleNotFoundError as e:
 
 ddir = lambda o: [a for a in dir(o) if not a.startswith('_')]
 dddir = lambda o: [a for a in dir(o) if not a.startswith('__')]
+
+
+from xdol import PyFilesReader
+
+
+def mk_code_aggregate_md(pkgs, *, copy_to_clipboard=True, save_to_path=None):
+    """Make a markdown file that aggregates all the code in the given packages.
+
+    Returns the markdown string.
+
+    Optionally (by default) copies the markdown to the clipboard.
+
+    If, additionally, you specify a `save_to_path` (folder or explicit file path),
+    it will save the markdown there too.
+    """
+
+    from xdol import PyFilesReader  # pip install xdol
+
+    if save_to_path:
+        # if it's a directory, extend it to contain the filename
+        if os.path.isdir(save_to_path):
+            name = '__'.join(map(lambda x: x.__name__, pkgs))
+            save_to_path = os.path.join(save_to_path, name + '.md')
+        else:  # check that the directory containing the filepath exists
+            containing_dir = os.path.dirname(save_to_path)
+            if not os.path.exists(containing_dir):
+                raise FileNotFoundError(
+                    f"Directory (needed to save Markdown) not found: {containing_dir}"
+                )
+
+    if not isinstance(pkgs, (list, tuple, set)):
+        pkgs = [pkgs]
+
+    def sections():
+        for pkg in pkgs:
+            yield f"# {pkg.__name__}\n\n"
+            s = PyFilesReader(pkg)
+            for k, v in s.items():
+                yield f"## {k}\n\n" + v
+
+    aggregate = '\n\n'.join(sections())
+
+    if copy_to_clipboard:
+        import pyperclip  # pip install pyperclip
+
+        pyperclip.copy(aggregate)
+
+    if save_to_path:
+        with open(save_to_path, 'w') as f:
+            f.write(aggregate)
+
+    return aggregate
 
 
 def notebook_url(path: str, root_url='http://localhost:8888/'):
