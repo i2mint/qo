@@ -356,11 +356,14 @@ def name_and_object_pairs(
 
     Get method names of the dict class:
 
-    >>> next(zip(*name_and_object_pairs(dict)))
+    >>> sorted(next(zip(*name_and_object_pairs(dict))))
+    ['clear', 'copy', 'fromkeys', 'get', 'items', 'keys', 'pop', 'popitem', 'setdefault', 'update', 'values']
 
     Get only those names of dict methods that contain the string 'keys':
 
-    >>> next(zip(*name_and_object_pairs(dict, name_filt=lambda x: 'keys' in x)))
+    >>> sorted(next(zip(*name_and_object_pairs(dict, name_filt=lambda x: 'keys' in x))))
+    ['fromkeys', 'keys']
+
 
     """
     if not isinstance(objects, Iterable):
