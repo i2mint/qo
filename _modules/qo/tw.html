@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qo.tw &mdash; qo 0.0.16 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=c7cdf6fe"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            qo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/qo.html">qo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/qo/qo_utils.html">qo.qo_utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/qo/tw.html">qo.tw</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">qo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../qo.html">qo</a></li>
+      <li class="breadcrumb-item active">qo.tw</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for qo.tw</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A medley of my most frequently used tools.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># WARNING: Don&#39;t delete unused imports. They are to have all in one place.</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">qo.qo_utils</span> <span class="kn">import</span> <span class="n">module_not_found_ignore</span>
+
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">PrettyPrinter</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="k">except</span> <span class="ne">ModuleNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">ddir</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)]</span>
+<span class="n">dddir</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)]</span>
+
+
+<div class="viewcode-block" id="mk_code_aggregate_md">
+<a class="viewcode-back" href="../../module_docs/qo/tw.html#qo.tw.mk_code_aggregate_md">[docs]</a>
+<span class="k">def</span> <span class="nf">mk_code_aggregate_md</span><span class="p">(</span><span class="n">pkgs</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">copy_to_clipboard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_to_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a markdown file that aggregates all the code in the given packages.</span>
+
+<span class="sd">    Returns the markdown string.</span>
+
+<span class="sd">    Optionally (by default) copies the markdown to the clipboard.</span>
+
+<span class="sd">    If, additionally, you specify a `save_to_path` (folder or explicit file path),</span>
+<span class="sd">    it will save the markdown there too.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">xdol</span> <span class="kn">import</span> <span class="n">PyFilesReader</span>  <span class="c1"># pip install xdol</span>
+
+    <span class="k">if</span> <span class="n">save_to_path</span><span class="p">:</span>
+        <span class="c1"># if it&#39;s a directory, extend it to contain the filename</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">save_to_path</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;__&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">pkgs</span><span class="p">))</span>
+            <span class="n">save_to_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_to_path</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.md&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># check that the directory containing the filepath exists</span>
+            <span class="n">containing_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">save_to_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">containing_dir</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Directory (needed to save Markdown) not found: </span><span class="si">{</span><span class="n">containing_dir</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pkgs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="nb">set</span><span class="p">)):</span>
+        <span class="n">pkgs</span> <span class="o">=</span> <span class="p">[</span><span class="n">pkgs</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">sections</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="n">pkgs</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;# </span><span class="si">{</span><span class="n">pkg</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">PyFilesReader</span><span class="p">(</span><span class="n">pkg</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;## </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">v</span>
+
+    <span class="n">aggregate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sections</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="n">copy_to_clipboard</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">pyperclip</span>  <span class="c1"># pip install pyperclip</span>
+
+        <span class="n">pyperclip</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">aggregate</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">save_to_path</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_to_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">aggregate</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">aggregate</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">notebook_url</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">root_url</span><span class="o">=</span><span class="s1">&#39;http://localhost:8888/&#39;</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+
+    <span class="c1"># TODO: Figure out how to get the rootdir from the root_url</span>
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.ipynb&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_url</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_url</span><span class="p">,</span> <span class="s1">&#39;tree&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="goto_definition_file">
+<a class="viewcode-back" href="../../module_docs/qo/tw.html#qo.tw.goto_definition_file">[docs]</a>
+<span class="k">def</span> <span class="nf">goto_definition_file</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Will open the file that defines the obj and prints&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">inspect</span><span class="o">,</span> <span class="nn">subprocess</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">lineno</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">findsource</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">obj</span><span class="p">)])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Definition on line number: </span><span class="si">{</span><span class="n">lineno</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="goto_definition">
+<a class="viewcode-back" href="../../module_docs/qo/tw.html#qo.tw.goto_definition">[docs]</a>
+<span class="k">def</span> <span class="nf">goto_definition</span><span class="p">(</span>
+    <span class="n">obj</span><span class="p">,</span> <span class="n">command_template</span><span class="o">=</span><span class="s1">&#39;open -na &quot;PyCharm.app&quot; --args --line </span><span class="si">{lineno}</span><span class="s1"> &quot;</span><span class="si">{filepath}</span><span class="s1">&quot;&#39;</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Opens the definition of the object in the file it was defined at the line it</span>
+<span class="sd">    was defined.</span>
+
+<span class="sd">    The default is set to use pycharm to open the file on a mac.</span>
+
+<span class="sd">    To customize for your system/file_viewer, just use `functools.partial` to</span>
+<span class="sd">    fix the `command_template` for your case.</span>
+
+<span class="sd">    For pycharm on other systems, see:</span>
+<span class="sd">    https://www.jetbrains.com/help/pycharm/opening-files-from-command-line.html</span>
+
+<span class="sd">    For vi, see:</span>
+<span class="sd">    https://www.cyberciti.biz/faq/linux-unix-command-open-file-linenumber-function/</span>
+
+<span class="sd">    Etc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">inspect</span><span class="o">,</span> <span class="nn">os</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">lineno</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">findsource</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">command_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="n">filepath</span><span class="p">,</span> <span class="n">lineno</span><span class="o">=</span><span class="n">lineno</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>  <span class="c1"># would prefer to use subprocess, but something I&#39;m missing</span>
+        <span class="c1">## Not working with subprocess.run</span>
+        <span class="c1">#     import subprocess</span>
+        <span class="c1">#     print(command)</span>
+        <span class="c1">#     return subprocess.run(command.split(&#39; &#39;))</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;func&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">goto_definition</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">command_template</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span></div>
+
+
+
+<span class="n">ignore_errors</span> <span class="o">=</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">lkj</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">wrapped_print</span><span class="p">,</span>
+        <span class="n">truncate_dict_values</span><span class="p">,</span>
+        <span class="n">truncate_string_with_marker</span><span class="p">,</span>
+        <span class="n">regex_based_substitution</span><span class="p">,</span>
+        <span class="n">print_progress</span><span class="p">,</span>
+        <span class="n">print_with_timestamp</span><span class="p">,</span>
+        <span class="n">clog</span><span class="p">,</span>
+        <span class="n">log_calls</span><span class="p">,</span>
+        <span class="n">import_object</span><span class="p">,</span>
+        <span class="n">identity</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">lkj.importing</span> <span class="kn">import</span> <span class="n">import_object</span><span class="p">,</span> <span class="n">register_namespace_forwarding</span>
+    <span class="kn">from</span> <span class="nn">lkj.misc</span> <span class="kn">import</span> <span class="n">identity</span><span class="p">,</span> <span class="n">value_in_interval</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">scraped</span> <span class="kn">import</span> <span class="n">download_site</span><span class="p">,</span> <span class="n">markdown_of_site</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">hubcap</span> <span class="kn">import</span> <span class="n">github_repo_text_aggregate</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tested</span> <span class="kn">import</span> <span class="n">validate_codec</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">unbox</span> <span class="kn">import</span> <span class="n">print_missing_names</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">code_to_dag</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">FuncNode</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tabled</span> <span class="kn">import</span> <span class="n">get_tables_from_url</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">disp_wfsr</span><span class="p">(</span>
+        <span class="n">wf</span><span class="p">,</span>
+        <span class="n">sr</span><span class="o">=</span><span class="mi">44100</span><span class="p">,</span>
+        <span class="n">offset_s</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># for display of x axix ticks only (not implemented yet)</span>
+    <span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+            <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Audio</span>
+
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">wf</span>
+            <span class="p">)</span>  <span class="c1"># TODO: mk x axis ticks be labeled based on time (aligned to whole seconds, or minutes...)</span>
+            <span class="k">return</span> <span class="n">Audio</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">wf</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">sr</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">ModuleNotFoundError</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">py2store</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">ihead</span><span class="p">,</span>
+        <span class="n">kvhead</span><span class="p">,</span>
+        <span class="n">QuickStore</span><span class="p">,</span>
+        <span class="n">LocalBinaryStore</span><span class="p">,</span>
+        <span class="n">LocalJsonStore</span><span class="p">,</span>
+        <span class="n">LocalPickleStore</span><span class="p">,</span>
+        <span class="n">LocalTextStore</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">py2store</span> <span class="kn">import</span> <span class="n">kv_wrap</span><span class="p">,</span> <span class="n">wrap_kvs</span><span class="p">,</span> <span class="n">filt_iter</span><span class="p">,</span> <span class="n">cached_keys</span>
+    <span class="kn">from</span> <span class="nn">py2store.util</span> <span class="kn">import</span> <span class="n">lazyprop</span>
+    <span class="kn">from</span> <span class="nn">py2store.my.grabbers</span> <span class="kn">import</span> <span class="n">grabber_for</span> <span class="k">as</span> <span class="n">_grabber_for</span>
+
+    <span class="n">igrab</span> <span class="o">=</span> <span class="n">_grabber_for</span><span class="p">(</span><span class="s1">&#39;ipython&#39;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">i2.doc_mint</span> <span class="kn">import</span> <span class="n">doctest_string_print</span><span class="p">,</span> <span class="n">doctest_string</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">ut.daf.ch</span>
+    <span class="kn">import</span> <span class="nn">ut.daf.manip</span>
+    <span class="kn">import</span> <span class="nn">ut.daf.gr</span>
+    <span class="kn">import</span> <span class="nn">ut.daf.to</span>
+    <span class="kn">from</span> <span class="nn">ut.daf.diagnosis</span> <span class="kn">import</span> <span class="n">diag_df</span> <span class="k">as</span> <span class="n">diag_df</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">ut.pdict.get</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">ut.util.pstore</span>
+
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">ut.pcoll.num</span> <span class="kn">import</span> <span class="n">numof_trues</span>
+
+<span class="c1"># with module_not_found_ignore:</span>
+<span class="c1">#     from ut.util.log import printProgress, print_progress</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">ut.pplot.distrib</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">ut.pplot.matrix</span> <span class="kn">import</span> <span class="n">heatmap</span>
+    <span class="kn">from</span> <span class="nn">ut.pplot.my</span> <span class="kn">import</span> <span class="n">vlines</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">ut.sh.py</span> <span class="kn">import</span> <span class="n">add_to_pythonpath_if_not_there</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">ut.util.importing</span> <span class="kn">import</span> <span class="n">import_from_dot_string</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">ut.net.viz</span> <span class="kn">import</span> <span class="n">dgdisp</span><span class="p">,</span> <span class="n">dagdisp</span><span class="p">,</span> <span class="n">dot_to_ascii</span>
+
+<span class="k">with</span> <span class="n">module_not_found_ignore</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">ut.util.ipython</span> <span class="kn">import</span> <span class="n">all_table_of_contents_html_from_notebooks</span>
+
+
+<span class="k">with</span> <span class="n">ignore_errors</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">ut.webscrape.tables</span> <span class="kn">import</span> <span class="n">get_tables_from_url</span>
+
+<span class="k">with</span> <span class="n">ignore_errors</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">i2.deco</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">preprocess</span><span class="p">,</span>
+        <span class="n">postprocess</span><span class="p">,</span>
+        <span class="n">preprocess_arguments</span><span class="p">,</span>
+        <span class="n">input_output_decorator</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">i2.deco</span> <span class="kn">import</span> <span class="n">wrap_class_methods_input_and_output</span>
+    <span class="kn">from</span> <span class="nn">i2.signatures</span> <span class="kn">import</span> <span class="n">Sig</span>
+
+<span class="k">with</span> <span class="n">ignore_errors</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">ut.util.my_proj_populate</span> <span class="kn">import</span> <span class="n">populate_proj_from_url</span>
+
+
+<span class="k">with</span> <span class="n">ignore_errors</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">ut.util.context_managers</span> <span class="kn">import</span> <span class="n">TimerAndFeedback</span>
+
+<span class="k">with</span> <span class="n">ignore_errors</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">sklearn</span>
+    <span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+    <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+    <span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span><span class="p">,</span> <span class="n">IncrementalPCA</span>
+    <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+    <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span><span class="p">,</span> <span class="n">LinearRegression</span>
+    <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">NearestNeighbors</span><span class="p">,</span>
+        <span class="n">KNeighborsClassifier</span><span class="p">,</span>
+        <span class="n">KNeighborsTransformer</span><span class="p">,</span>
+        <span class="n">KNeighborsRegressor</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+
+<span class="k">with</span> <span class="n">ignore_errors</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">grub</span> <span class="kn">import</span> <span class="n">CodeSearcher</span>
+
+    <span class="k">def</span> <span class="nf">grub_code</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">module</span><span class="p">):</span>
+        <span class="n">search</span> <span class="o">=</span> <span class="n">CodeSearcher</span><span class="p">(</span><span class="n">module</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
