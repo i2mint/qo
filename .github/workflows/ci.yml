@@ -7,7 +7,7 @@ jobs:
   validation:
 
     name: Validation
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -45,7 +45,7 @@ jobs:
 
   publish:
     name: Publish
-    if: "!contains(github.event.head_commit.message, '[skip ci]') && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main') }}
     needs: validation
     runs-on: ubuntu-latest
     strategy:
@@ -92,7 +92,7 @@ jobs:
 
   github-pages:
     name: Publish GitHub Pages
-    if: "!contains(github.event.head_commit.message, '[skip ci]') && github.ref == 'refs/heads/master'"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && github.ref == 'refs/heads/master' }}
     needs: publish
     runs-on: ubuntu-latest
     steps:
