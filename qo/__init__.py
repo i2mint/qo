@@ -1,10 +1,11 @@
 """
 Personalized and collaborative quick access to imports.
 """
+
 from operator import methodcaller as _methodcaller
 from qo.qo_utils import module_not_found_ignore, find_objects
 
-source_module_names = ['tw']
+source_module_names = ["tw"]
 
 
 def copy_to_clipboard(obj):
@@ -29,10 +30,10 @@ def reload_module(module):
     if not isinstance(module, ModuleType):
         if isinstance(module, str):
             module = import_module(module)
-        elif hasattr(module, '__module__'):
+        elif hasattr(module, "__module__"):
             module = import_module(module.__module__)
         else:
-            raise TypeError(f'Expected module or module name: {module}')
+            raise TypeError(f"Expected module or module name: {module}")
 
     return _reload(module)
 
@@ -54,16 +55,16 @@ with module_not_found_ignore:
     for obj_name, obj in all_estimators():
         acquire(obj_name, obj.__module__)
 
-    acquire('metrics', 'sklearn')
-    acquire('confusion_matrix', 'sklearn.metrics')
+    acquire("metrics", "sklearn")
+    acquire("confusion_matrix", "sklearn.metrics")
 
-_root_names = tuple(filter(lambda x: not x.startswith('_'), locals()))
+_root_names = tuple(filter(lambda x: not x.startswith("_"), locals()))
 
 
 def find_names(query: str):
     """Find names of objects exposed in ``qo`` root."""
     return list(
         find_objects(
-            query, _root_names, key=[_methodcaller('span'), lambda x: len(x.string)]
+            query, _root_names, key=[_methodcaller("span"), lambda x: len(x.string)]
         )
     )

@@ -18,10 +18,10 @@ import json
 try:
     import matplotlib.pylab as plt
 except ModuleNotFoundError as e:
-    warn(f'{e}: {e.args}')
+    warn(f"{e}: {e.args}")
 
-ddir = lambda o: [a for a in dir(o) if not a.startswith('_')]
-dddir = lambda o: [a for a in dir(o) if not a.startswith('__')]
+ddir = lambda o: [a for a in dir(o) if not a.startswith("_")]
+dddir = lambda o: [a for a in dir(o) if not a.startswith("__")]
 
 
 def mk_code_aggregate_md(pkgs, *, copy_to_clipboard=True, save_to_path=None):
@@ -40,8 +40,8 @@ def mk_code_aggregate_md(pkgs, *, copy_to_clipboard=True, save_to_path=None):
     if save_to_path:
         # if it's a directory, extend it to contain the filename
         if os.path.isdir(save_to_path):
-            name = '__'.join(map(lambda x: x.__name__, pkgs))
-            save_to_path = os.path.join(save_to_path, name + '.md')
+            name = "__".join(map(lambda x: x.__name__, pkgs))
+            save_to_path = os.path.join(save_to_path, name + ".md")
         else:  # check that the directory containing the filepath exists
             containing_dir = os.path.dirname(save_to_path)
             if not os.path.exists(containing_dir):
@@ -59,7 +59,7 @@ def mk_code_aggregate_md(pkgs, *, copy_to_clipboard=True, save_to_path=None):
             for k, v in s.items():
                 yield f"## {k}\n\n" + v
 
-    aggregate = '\n\n'.join(sections())
+    aggregate = "\n\n".join(sections())
 
     if copy_to_clipboard:
         import pyperclip  # pip install pyperclip
@@ -67,20 +67,20 @@ def mk_code_aggregate_md(pkgs, *, copy_to_clipboard=True, save_to_path=None):
         pyperclip.copy(aggregate)
 
     if save_to_path:
-        with open(save_to_path, 'w') as f:
+        with open(save_to_path, "w") as f:
             f.write(aggregate)
 
     return aggregate
 
 
-def notebook_url(path: str, root_url='http://localhost:8888/'):
+def notebook_url(path: str, root_url="http://localhost:8888/"):
     import os
 
     # TODO: Figure out how to get the rootdir from the root_url
-    if path.endswith('.ipynb'):
+    if path.endswith(".ipynb"):
         return os.path.join(root_url, path)
     else:
-        return os.path.join(root_url, 'tree', path)
+        return os.path.join(root_url, "tree", path)
 
 
 def goto_definition_file(obj):
@@ -88,8 +88,8 @@ def goto_definition_file(obj):
     import inspect, subprocess
 
     _, lineno = inspect.findsource(obj)
-    subprocess.run(['open', inspect.getfile(obj)])
-    print(f'Definition on line number: {lineno}')
+    subprocess.run(["open", inspect.getfile(obj)])
+    print(f"Definition on line number: {lineno}")
 
 
 def goto_definition(
@@ -123,7 +123,7 @@ def goto_definition(
         #     print(command)
         #     return subprocess.run(command.split(' '))
     except TypeError:
-        if hasattr(obj, 'func'):
+        if hasattr(obj, "func"):
             return goto_definition(obj.func, command_template)
         else:
             raise
@@ -198,7 +198,7 @@ with module_not_found_ignore:
     from py2store.util import lazyprop
     from py2store.my.grabbers import grabber_for as _grabber_for
 
-    igrab = _grabber_for('ipython')
+    igrab = _grabber_for("ipython")
 
 with module_not_found_ignore:
     from i2.doc_mint import doctest_string_print, doctest_string
