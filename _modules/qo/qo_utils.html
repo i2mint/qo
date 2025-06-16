@@ -6,16 +6,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>qo.qo_utils &mdash; qo 0.0.16 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=c7cdf6fe"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -83,37 +83,37 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="n">DFLT_USE_CCHARDET</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">cchardet</span> <span class="k">as</span> <span class="nn">chardet</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">cchardet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">chardet</span>
 <span class="k">except</span> <span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">chardet</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">chardet</span>
     <span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
         <span class="n">DFLT_USE_CCHARDET</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="n">encoding_spec_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;-*- coding: (.+) -*-&#39;</span><span class="p">)</span>
 
 
-<span class="kn">import</span> <span class="nn">operator</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span>
 
 <span class="n">Query</span> <span class="o">=</span> <span class="n">Any</span>
 <span class="n">Item</span> <span class="o">=</span> <span class="n">Any</span>
 
 
-<span class="k">def</span> <span class="nf">identity</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">identity</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">x</span>
 
 
 <div class="viewcode-block" id="find">
 <a class="viewcode-back" href="../../module_docs/qo/qo_utils.html#qo.qo_utils.find">[docs]</a>
-<span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span>
     <span class="n">query</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Item</span><span class="p">],</span>
     <span class="n">query_matches_item</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Query</span><span class="p">,</span> <span class="n">Item</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">eq</span><span class="p">,</span>
@@ -162,14 +162,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_query</span> <span class="o">=</span> <span class="n">query_key</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">filt</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filt</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">query_matches_item</span><span class="p">(</span><span class="n">_query</span><span class="p">,</span> <span class="n">item_key</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="nb">filter</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span></div>
 
 
 
-<span class="k">def</span> <span class="nf">_old_find_left_for_educational_purposes</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_old_find_left_for_educational_purposes</span><span class="p">(</span>
     <span class="n">strings</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;subset&#39;</span><span class="p">,</span> <span class="n">content_func</span><span class="o">=</span><span class="s1">&#39;everywhere&#39;</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -211,7 +211,7 @@
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">filt</span><span class="p">,</span> <span class="n">strings</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">extract_encoding_from_contents</span><span class="p">(</span><span class="n">content_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_encoding_from_contents</span><span class="p">(</span><span class="n">content_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">encoding_spec_re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">content_bytes</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -219,7 +219,7 @@
         <span class="k">return</span> <span class="kc">None</span>
 
 
-<span class="k">def</span> <span class="nf">get_encoding</span><span class="p">(</span><span class="n">content_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">use_cchardet</span><span class="o">=</span><span class="n">DFLT_USE_CCHARDET</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_encoding</span><span class="p">(</span><span class="n">content_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">use_cchardet</span><span class="o">=</span><span class="n">DFLT_USE_CCHARDET</span><span class="p">):</span>
     <span class="n">extracted_encoding</span> <span class="o">=</span> <span class="n">extract_encoding_from_contents</span><span class="p">(</span><span class="n">content_bytes</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">extracted_encoding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">extracted_encoding</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
@@ -234,7 +234,7 @@
 <span class="n">decoding_problem_sentinel</span> <span class="o">=</span> <span class="s1">&#39;# --- did not manage to decode .py file bytes --- #&#39;</span>
 
 
-<span class="k">def</span> <span class="nf">decode_or_default</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">decode_or_default</span><span class="p">(</span>
     <span class="n">b</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">dflt</span><span class="o">=</span><span class="n">decoding_problem_sentinel</span><span class="p">,</span> <span class="n">use_cchardet</span><span class="o">=</span><span class="n">DFLT_USE_CCHARDET</span>
 <span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
@@ -248,7 +248,7 @@
 
 
 <span class="c1"># Pattern: meshed</span>
-<span class="k">def</span> <span class="nf">resolve_module_filepath</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_module_filepath</span><span class="p">(</span>
     <span class="n">module_spec</span><span class="p">,</span> <span class="n">assert_output_is_existing_filepath</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">ismodule</span><span class="p">(</span><span class="n">module_spec</span><span class="p">):</span>
@@ -270,7 +270,7 @@
 
 
 <span class="c1"># Pattern: meshed</span>
-<span class="k">def</span> <span class="nf">resolve_to_folder</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">assert_output_is_existing_folder</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_to_folder</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">assert_output_is_existing_folder</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">ismodule</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsourcefile</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -287,7 +287,7 @@
 
 
 <span class="c1"># Pattern: meshed</span>
-<span class="k">def</span> <span class="nf">resolve_module_contents</span><span class="p">(</span><span class="n">module_spec</span><span class="p">,</span> <span class="n">dflt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assert_output_is_str</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_module_contents</span><span class="p">(</span><span class="n">module_spec</span><span class="p">,</span> <span class="n">dflt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">assert_output_is_str</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module_spec</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">module_spec</span><span class="p">):</span>
         <span class="n">module_spec</span> <span class="o">=</span> <span class="n">resolve_module_filepath</span><span class="p">(</span><span class="n">module_spec</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">module_spec</span><span class="p">):</span>
@@ -306,13 +306,13 @@
 <span class="c1"># What&#39;s below was developed independently but has strong ties with what&#39;s above, so</span>
 <span class="c1"># should probably be merged, or at least synched to reduce unnecessary entropy</span>
 
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span><span class="p">,</span> <span class="n">methodcaller</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sized</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">suppress</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">attrgetter</span><span class="p">,</span> <span class="n">methodcaller</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">import_module</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sized</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">signature</span>
 
 <span class="n">module_not_found_ignore</span> <span class="o">=</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">ImportError</span><span class="p">)</span>
 
@@ -321,7 +321,7 @@
 
 <div class="viewcode-block" id="import_and_add_if_available">
 <a class="viewcode-back" href="../../module_docs/qo/qo_utils.html#qo.qo_utils.import_and_add_if_available">[docs]</a>
-<span class="k">def</span> <span class="nf">import_and_add_if_available</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">import_and_add_if_available</span><span class="p">(</span>
     <span class="n">obj_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">as_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -399,29 +399,29 @@
 <span class="n">_if_not_iterable_get_attributes</span><span class="p">:</span> <span class="n">StringIterableFactory</span>
 
 
-<span class="k">def</span> <span class="nf">_if_not_iterable_get_attributes</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_if_not_iterable_get_attributes</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ddir</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">x</span>
 
 
-<span class="k">def</span> <span class="nf">_attribute_name_object_pairs</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_attribute_name_object_pairs</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="n">ddir</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
         <span class="k">yield</span> <span class="n">attr_name</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_not_prefixed_by_underscore</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_not_prefixed_by_underscore</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">return</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_is_pair</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_pair</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Sized</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
 
 
 <span class="c1"># Pattern: meshed</span>
 <div class="viewcode-block" id="name_and_object_pairs">
 <a class="viewcode-back" href="../../module_docs/qo/qo_utils.html#qo.qo_utils.name_and_object_pairs">[docs]</a>
-<span class="k">def</span> <span class="nf">name_and_object_pairs</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">name_and_object_pairs</span><span class="p">(</span>
     <span class="n">objects</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">objects_to_iterable</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">]</span> <span class="o">=</span> <span class="n">_attribute_name_object_pairs</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -460,11 +460,11 @@
     <span class="n">name_filt</span> <span class="o">=</span> <span class="n">name_filt</span> <span class="ow">or</span> <span class="n">let_everything_through_filter</span>
     <span class="n">obj_filt</span> <span class="o">=</span> <span class="n">obj_filt</span> <span class="ow">or</span> <span class="n">let_everything_through_filter</span>
 
-    <span class="k">def</span> <span class="nf">filt</span><span class="p">(</span><span class="n">pair</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filt</span><span class="p">(</span><span class="n">pair</span><span class="p">):</span>
         <span class="n">obj_name</span><span class="p">,</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">pair</span>
         <span class="k">return</span> <span class="n">name_filt</span><span class="p">(</span><span class="n">obj_name</span><span class="p">)</span> <span class="ow">and</span> <span class="n">obj_filt</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">ensure_pair</span><span class="p">(</span><span class="n">pair</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ensure_pair</span><span class="p">(</span><span class="n">pair</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">_is_pair</span><span class="p">(</span><span class="n">pair</span><span class="p">):</span>
             <span class="c1"># unpack pair (assuming it&#39;s a (name, obj) pair already)</span>
             <span class="k">return</span> <span class="n">pair</span>  <span class="c1"># assume it&#39;s a (name, obj) pair already</span>
@@ -481,7 +481,7 @@
 
 <div class="viewcode-block" id="signature_strings">
 <a class="viewcode-back" href="../../module_docs/qo/qo_utils.html#qo.qo_utils.signature_strings">[docs]</a>
-<span class="k">def</span> <span class="nf">signature_strings</span><span class="p">(</span><span class="n">objects</span><span class="p">,</span> <span class="n">object_to_strings</span><span class="p">:</span> <span class="n">StringIterableFactory</span> <span class="o">=</span> <span class="n">ddir</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">signature_strings</span><span class="p">(</span><span class="n">objects</span><span class="p">,</span> <span class="n">object_to_strings</span><span class="p">:</span> <span class="n">StringIterableFactory</span> <span class="o">=</span> <span class="n">ddir</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A generator of strings describing the callables in obj (module, class, ...)&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">name_and_object_pairs</span><span class="p">(</span><span class="n">objects</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
@@ -491,7 +491,7 @@
 
 <div class="viewcode-block" id="print_signatures">
 <a class="viewcode-back" href="../../module_docs/qo/qo_utils.html#qo.qo_utils.print_signatures">[docs]</a>
-<span class="k">def</span> <span class="nf">print_signatures</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">object_to_strings</span><span class="p">:</span> <span class="n">StringIterableFactory</span> <span class="o">=</span> <span class="n">ddir</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> * &#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_signatures</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">object_to_strings</span><span class="p">:</span> <span class="n">StringIterableFactory</span> <span class="o">=</span> <span class="n">ddir</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> * &#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Prints information on callable attributes of obj (module, class, ...)&quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">signature_strings</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">object_to_strings</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">)</span></div>
 
@@ -499,7 +499,7 @@
 
 <div class="viewcode-block" id="find_objects">
 <a class="viewcode-back" href="../../module_docs/qo/qo_utils.html#qo.qo_utils.find_objects">[docs]</a>
-<span class="k">def</span> <span class="nf">find_objects</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_objects</span><span class="p">(</span>
     <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">objects</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">objects_to_strings</span><span class="p">:</span> <span class="n">StringIterableFactory</span> <span class="o">=</span> <span class="n">_if_not_iterable_get_attributes</span><span class="p">,</span>
@@ -572,7 +572,7 @@
 
 <div class="viewcode-block" id="func_fanout">
 <a class="viewcode-back" href="../../module_docs/qo/qo_utils.html#qo.qo_utils.func_fanout">[docs]</a>
-<span class="k">def</span> <span class="nf">func_fanout</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">funcs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func_fanout</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">funcs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Util to make a function that applies multiple functions to a single input.</span>
 <span class="sd">    Note that the function returns a generator that needs to be &quot;consumed&quot; to actually</span>
 <span class="sd">    get the outputs of the function.</span>
@@ -599,7 +599,7 @@
 
 <div class="viewcode-block" id="bitmap_selection">
 <a class="viewcode-back" href="../../module_docs/qo/qo_utils.html#qo.qo_utils.bitmap_selection">[docs]</a>
-<span class="k">def</span> <span class="nf">bitmap_selection</span><span class="p">(</span><span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bitmap_selection</span><span class="p">(</span><span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Select items of an iterable with items of a selector sequence of the same size.</span>
 <span class="sd">    The selector items should be, or resolve to, a ``bool``.</span>
 
